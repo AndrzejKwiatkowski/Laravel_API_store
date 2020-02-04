@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Articele;
+use App\Parcel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
-class ArticeleController extends Controller
+class ParcelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,7 @@ class ArticeleController extends Controller
      */
     public function index()
     {
-        return Articele::get();
+        //
     }
 
     /**
@@ -35,27 +36,40 @@ class ArticeleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $payLoad = json_decode($request->getContent(), true);
+    //.dd($payLoad);
+             $parcel = new Parcel;
+             $parcel->order_id = 1;
+             $parcel->articele_id = Arr::get($payLoad, '0.id');
+             $parcel->quantity = Arr::get($payLoad, '0.quantity');
+            
+            // $parcel->quantity = $payLoad['name'];
+             $parcel->save();
+
+           $elo = Parcel::all();
+                
+        return response($elo);
+        
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Articele  $id
+     * @param  \App\Parcel  $parcel
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Parcel $parcel)
     {
-        return Articele::findOrFail($id);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Articele  $articele
+     * @param  \App\Parcel  $parcel
      * @return \Illuminate\Http\Response
      */
-    public function edit(Articele $articele)
+    public function edit(Parcel $parcel)
     {
         //
     }
@@ -64,10 +78,10 @@ class ArticeleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Articele  $articele
+     * @param  \App\Parcel  $parcel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Articele $articele)
+    public function update(Request $request, Parcel $parcel)
     {
         //
     }
@@ -75,10 +89,10 @@ class ArticeleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Articele  $articele
+     * @param  \App\Parcel  $parcel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Articele $articele)
+    public function destroy(Parcel $parcel)
     {
         //
     }
