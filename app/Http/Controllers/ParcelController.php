@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Parcel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use App\Parcel;
+
 
 class ParcelController extends Controller
 {
@@ -36,19 +37,24 @@ class ParcelController extends Controller
      */
     public function store(Request $request)
     {
-        $payLoad = json_decode($request->getContent(), true);
-    //.dd($payLoad);
+        $payLoads = json_decode($request->getContent(), true);
+        $latestOrder = Parcel::orderBy('created_at','DESC')->first();
+       // dd($latestOrder);
+
+    foreach ($payLoads as $payLoad) {
              $parcel = new Parcel;
-             $parcel->order_id = 1;
-             $parcel->articele_id = Arr::get($payLoad, '0.id');
-             $parcel->quantity = Arr::get($payLoad, '0.quantity');
+             $parcel->order_id = str_pad($latestOrder->id + 1, 8, "0", STR_PAD_LEFT);
+             $parcel->articele_id = $payLoad['id'];
+             $parcel->quantity = $payLoad['quantity'] ;
             
             // $parcel->quantity = $payLoad['name'];
              $parcel->save();
+    }
 
            $elo = Parcel::all();
                 
         return response($elo);
+    
         
     }
 
